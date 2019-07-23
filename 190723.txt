@@ -1,0 +1,59 @@
+
+--문제
+--1. 직급(JOB)이 MANAGER인 사람들의 이름(ENAME)과 그들이 속한 부서 번호(DEPTNO), 부서명(DNAME), 지역(LOC)을 검색하시오.
+--2. 직급(JOB)별로 입사연도(HIREDATE)가 가장 먼저인 사람들을 검색한 후, 그 사람들의 ENAME, SAL을 이름 알파벳 순대로 검색하시오.
+--3. 직급이 SALESMAN이거나 CLERK인 사람들의 MGR들에 대한 모든 정보를 MGR이름 알파벳 순으로 검색하시오.
+
+	  
+	  
+	 
+
+
+
+
+
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+--답
+--1.	  
+select ename, emp.deptno, dname, loc from emp, dept where emp.deptno=dept.deptno and (ename, emp.deptno) in (select ename, deptno from emp where job='MANAGER');
+ENAME                    DEPTNO DNAME                        LOC
+-------------------- ---------- ---------------------------- --------------------------
+JONES                        20 RESEARCH                     DALLAS
+BLAKE                        30 SALES                        CHICAGO
+CLARK                        10 ACCOUNTING                   NEW YORK
+
+--2.
+select distinct a.ename, a.sal from emp a, emp b where a.sal > b.sal and (b.job, b.hiredate) in (select job, min(hiredate) from emp group by job) order by a.ename asc;
+ENAME                       SAL
+-------------------- ----------
+ALLEN                      1600
+BLAKE                      2850
+CLARK                      2450
+FORD                       3000
+JAMES                       950
+JONES                      2975
+KING                       5000
+MARTIN                     1250
+MILLER                     1300
+TURNER                     1500
+WARD                       1250
+11 rows selected.
+
+--3.
+select distinct e2.* from emp e1, emp e2 where e1.mgr=e2.empno and e1.mgr in (select mgr from emp where job in('SALESMAN', 'CLERK')) order by e2.ename asc;
+     EMPNO ENAME                JOB                       MGR HIREDATE        SAL       COMM     DEPTNO
+---------- -------------------- ------------------ ---------- -------- ---------- ---------- ----------
+      7698 BLAKE                MANAGER                  7839 81/05/01       2850                    30
+      7782 CLARK                MANAGER                  7839 81/06/09       2450                    10
+      7902 FORD                 ANALYST                  7566 81/12/03       3000                    20
+	  
